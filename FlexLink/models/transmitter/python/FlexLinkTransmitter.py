@@ -326,7 +326,7 @@ if __name__ == '__main__':
     EncodedPayloadA = Transmitter.EncodePayload(PayloadType    = 'A'
                                               , MacBytePayload =  ByteArrayPayloadA)   
 
-    EncodedPayloadA = Transmitter.EncodePayload(PayloadType    = 'B'
+    EncodedPayloadB = Transmitter.EncodePayload(PayloadType    = 'B'
                                               , MacBytePayload =  ByteArrayPayloadA)   
 
     Stop =1 
