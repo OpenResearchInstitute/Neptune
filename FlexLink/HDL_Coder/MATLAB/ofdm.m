@@ -287,6 +287,10 @@ XX = XXX';
 %We now have something that can be processed with a 1024 point IDFT.
 X = [0 XX(1:451) zeros(1,Nvc-1) XX(452:901)];
 
+%Create a vector of tones for Simulink implementation of IFFT 
+Xsim = X';
+%convert to time series for IFFT input in Simulink implementation
+Xsim = timeseries(Xsim, 1/Fs);
 
 %set up xt to be a 1 by T+1 matrix of zeros
 xt = zeros(1,T+1);
