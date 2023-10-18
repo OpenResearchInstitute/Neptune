@@ -8,6 +8,8 @@ __status__    = "preliminary"
 __version__   = "0.1.0.0"
 __date__      = "Aug, 8, 2023"
 __copyright__ = 'MIT License'
+__license__   = "MIT"
+
 
 # ------------------------------------------------
 # Module Imports

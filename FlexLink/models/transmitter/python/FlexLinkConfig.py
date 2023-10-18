@@ -1,5 +1,13 @@
 # Filename: FlexLinkConfig.py
 # Author:   Andreas Schwarzinger      Date: August 20, 2022
+__title__     = "FlexLinkConfig"
+__author__    = "Andreas Schwarzinger"
+__status__    = "preliminary"
+__date__      = "Sept, 4rd, 2022"
+__copyright__ = 'Andreas Schwarzinger'
+__license__   = "MIT"
+
+
 
 import math
 

@@ -6,11 +6,15 @@ __author__    = "Andreas Schwarzinger"
 __status__    = "preliminary"
 __date__      = "Dec, 26th, 2022"
 __copyright__ = 'Andreas Schwarzinger'
+__license__   = "MIT"
 
 # --------------------------------------------------------
 # Import Statements
 # --------------------------------------------------------
 # was from   FlexLinkParameters import *
+import sys
+sys.path.insert(0, '.\\python\\koliberEng')
+
 import FlexLinkParameters as fp
 from   FlexLinkCoder      import CCrcProcessor, CLdpcProcessor
 from   QamMapping         import CQamMappingIEEE
@@ -18,6 +22,8 @@ import Preamble
 import numpy              as np
 import math
 import matplotlib.pyplot  as plt
+import Visualization as vis
+
 
 # --------------------------------------------------------
 # > Class: CFlexTransmitter
@@ -48,6 +54,15 @@ class CFlexTransmitter():
         self.NumSubcarriers = Configuration.NumSubcarriers
         self.CpSamples      = Configuration.CpDurationSamples
         self.OccupiedBw     = self.NumSubcarriers * self.ScSpacing
+
+
+        # Build the preamble, these are constant depending on sample rate
+        # Build the AGC Burst
+        self.AgcBurst = Preamble.GenerateAgcBurst(self.SampleRate)
+        # Build the PreambleA
+        self.PreambleA = Preamble.GeneratePreambleA(self.SampleRate, 1024, 'long')
+        # Build the PreambleB
+        self.PreambleB = Preamble.GeneratePreambleB()
 
         # Ensure that the actual subcarrier spacing is close to the one provided by the
         # CControlInfo instance. If the sample rate is not 20.48MHz but for example
@@ -116,20 +131,25 @@ class CFlexTransmitter():
 
 
         # ----------------------------------------------
-        # Build the preamble
-        # ----------------------------------------------
-        # Build the AGC Burst
-        AgcBurst = Preamble.GenerateAgcBurst(self.SampleRate)
-        SampleLengthAgcBurst = len(AgcBurst)
+        # # Build the preamble
+        # # ----------------------------------------------
+        # # Build the AGC Burst
+        # AgcBurst = Preamble.GenerateAgcBurst(self.SampleRate)
+        # SampleLengthAgcBurst = len(AgcBurst)
 
-        # Build the PreambleA
-        PreambleA = Preamble.GeneratePreambleA(self.SampleRate
-                                            , 'long')
-        SampleLengthPreambleA = len(PreambleA)
+        # # Build the PreambleA
+        # PreambleA = Preamble.GeneratePreambleA(self.SampleRate
+        #                                     , 'long')
+        # SampleLengthPreambleA = len(PreambleA)
 
-        # Build the PreambleB
-        PreambleB = Preamble.GeneratePreambleB()
-        SampleLengthPreambleB = len(PreambleB)
+        # # Build the PreambleB
+        # PreambleB = Preamble.GeneratePreambleB()
+        # SampleLengthPreambleB = len(PreambleB)
+        
+        
+        print('Sample Length AgcBurst = ' + str(len(self.AgcBurst)))
+        print('Sample Length PreambleA = ' + str(len(self.PreambleA)))
+        print('Sample Length PreambleB = ' + str(len(self.PreambleB)))
         
         # Build the Payload
         SampleLengthPayloads  = self.NumOfdmSymobls * (self.FftSize + self.CpSamples)
@@ -241,6 +261,8 @@ class CFlexTransmitter():
 # > Testbench
 # ----------------------------------------------------------------------
 if __name__ == '__main__':
+
+    
     # ---------------------------------------------
     # 1. Set the fundamental simulation parameters
     # ---------------------------------------------

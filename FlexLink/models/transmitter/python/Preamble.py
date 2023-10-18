@@ -40,8 +40,10 @@ __author__    = "Andreas Schwarzinger"
 __status__    = "preliminary"
 __date__      = "Sept, 16rd, 2022"
 __copyright__ = 'Andreas Schwarzinger'
+__license__   = "MIT"
 
-from   SignalProcessing  import *
+# from   SignalProcessing  import *
+import SignalProcessing  as sp
 import numpy             as np
 import math
 import matplotlib.pyplot as plt
@@ -388,7 +390,7 @@ if __name__ == '__main__':
         # ------------------------
         # Add noise to the waveform
         SNRdB            = -5
-        RxPreambleANoisy = AddAwgn(SNRdB, TxPreambleA)     
+        RxPreambleANoisy = sp.AddAwgn(SNRdB, TxPreambleA)     
 
         # ------------------------
         # Add frequency Offset
@@ -405,7 +407,7 @@ if __name__ == '__main__':
         # ------------------------
         # Add noise to the waveform
         SNRdB            = 50
-        RxPreambleANoisy = AddAwgn(SNRdB, TxPreambleA)              
+        RxPreambleANoisy = sp.AddAwgn(SNRdB, TxPreambleA)              
    
         # ------------------------
         # Add frequency Offset
@@ -454,11 +456,11 @@ if __name__ == '__main__':
             print('Snr: ' + str(SnrDb))
             for Run in range(0, NumRuns):
                 # Add noise to the TxPreambleA
-                RxPreambleANoisy = AddAwgn(SnrDb, TxPreambleA)    
+                RxPreambleANoisy = sp.AddAwgn(SnrDb, TxPreambleA)    
                 # Add frequency offset  
                 RxPreambleA      = RxPreambleANoisy * Offset
                 # Add Multipath to the noise and frequency offset PreambleA
-                Output, MinDelay = AddMultipath(RxPreambleA, SampleRate, Delays, Constants, Dopplers) 
+                Output, MinDelay = sp.AddMultipath(RxPreambleA, SampleRate, Delays, Constants, Dopplers) 
 
                 # Run the frequency estimator
                 if SnrDb >= 10:
