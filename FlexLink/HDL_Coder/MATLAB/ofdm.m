@@ -136,7 +136,7 @@ echo on
 %using the IDFT values, compute the DFT using (7.6.7) and recover the
 %information symbols
 
-pause %Press any key to see a plot of x(t)
+%pause %Press any key to see a plot of x(t)
 
 %plot 0 to 100 in the x axis, and the absolute value of x(t) in the y axis.
 % Y = abs( X ) returns the absolute value of each element in input X . 
@@ -327,12 +327,12 @@ echo on
 %using the IDFT values, compute the DFT using (7.6.7) and recover the
 %information symbols
 
-pause %Press any key to see a plot of x(t)
+%pause %Press any key to see a plot of x(t)
 
 %plot 0 to 100 in the x axis, and the absolute value of x(t) in the y axis.
 % Y = abs( X ) returns the absolute value of each element in input X . 
 % If X is complex, abs(X) returns the complex magnitude. 
-figure
+figure('Name','Neptune x(t)');
 plot([0:T], abs(xt))
 
 %check the difference between xn and samples of x(t)
@@ -367,5 +367,6 @@ echo on
 dd = Y(1:IFFTsize) - X(1:IFFTsize);
 ee = norm(dd)
 
-%plot the error, leaving out k = 0. 
+%plot the error, leaving out k = 0.
+figure('Name','Plot the Difference Between Input Tones and the DFT');
 plot(2:1024, abs(dd(2:1024)), "LineWidth", 4)
