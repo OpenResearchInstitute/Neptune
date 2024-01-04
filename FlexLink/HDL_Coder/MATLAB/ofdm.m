@@ -363,7 +363,7 @@ end
 echo on
 
 %get the difference between the elements of Y and X, then get the
-%largest singular value of this list of differences. (10?)
+%largest singular value of this list of differences.
 dd = Y(1:IFFTsize) - X(1:IFFTsize);
 ee = norm(dd)
 
