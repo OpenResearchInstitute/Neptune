@@ -370,3 +370,16 @@ ee = norm(dd)
 %plot the error, leaving out k = 0.
 figure('Name','Plot the Difference Between Input Tones and the DFT');
 plot(2:1024, abs(dd(2:1024)), "LineWidth", 4)
+
+% Save entire workspace as ofdm_neptune_section_workspace.mat
+save('ofdm_neptune_section_workspace.mat')
+
+%% Load Neptune Workspace and open Simulink Models
+
+% load the workspace created by the Neptune section of this script
+load('ofdm_neptune_section_workspace.mat')
+
+% open the simulink models
+open_system("neptune_IDFT")
+open_system("neptune_IDFT_HDL_Coder_input")
+
