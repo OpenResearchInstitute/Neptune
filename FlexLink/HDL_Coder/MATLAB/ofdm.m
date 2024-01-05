@@ -379,7 +379,6 @@ save('ofdm_neptune_section_workspace.mat')
 % load the workspace created by the Neptune section of this script
 load('ofdm_neptune_section_workspace.mat')
 
-% open the simulink models
-open_system("neptune_IDFT")
+% open the simulink model under development
 open_system("neptune_IDFT_HDL_Coder_input")
 
