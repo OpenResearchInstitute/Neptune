@@ -374,6 +374,68 @@ plot(2:1024, abs(dd(2:1024)), "LineWidth", 4)
 % Save entire workspace as ofdm_neptune_section_workspace.mat
 save('ofdm_neptune_section_workspace.mat')
 
+%% AGC Burst Creation
+% This is a Zadoff-Chu sequence, similar to the one in 3GPP LTE
+% It has essentially zero autocorrelation off of the zero lag position.
+% Commonly used for synchronization in cellular protocols. 
+
+% Sequence length
+Nzc = 887;
+
+% Root index
+u = 34;
+
+% Zadoff Chu sequence function
+AgcBurst1 = zadoffChuSeq(u,Nzc);
+
+% Visualization
+ figure('Name', 'Neptune Zadoff-Chu Sequence I vs Q');
+ plot(AgcBurst1);
+ figure('Name', 'First 100 values of Neptune Zadoff-Chu Sequence')
+ plot([1:100],AgcBurst1(1:100));
+
+% We now take the Nzc = 887-point discrete Fourier transform.
+% A second argument to fft specifies a number of points n for 
+% the transform, representing DFT length.
+
+AgcBurst2 = fft(AgcBurst1, IFFTsize);
+
+% By definition, we will have a certain number of positive 
+% frequency subcarriers, m = 0, 1, ... ,ScPositive-1 and a certain 
+% number of negative frequency subcarriers, 
+% m = Nzc - ScNegative, ... , Nzc-1.
+
+ScPositive = ceil(Nzc/2);
+ScNegative = floor(Nzc/2);
+
+% We set up an AGC IFFT input buffer of length 1024 
+
+AGC_IFFT_input = zeros(1024,1);
+
+% We map AgcBurst2 to the IFFT_input as so:
+% Note that MATLAB uses 1-based indexing 
+% and the specification uses 0-based indexing.
+% We need to ensure that index zero (DC) is set to zero. 
+
+AGC_IFFT_input(2:ScPositive) = AgcBurst2(2:ScPositive);
+AGC_IFFT_input(IFFTsize - ScNegative:1024) = AgcBurst2(Nzc - ScNegative:Nzc);
+
+% visualization
+ figure('Name', 'Our IFFT Input');
+ plot([1:1024],AGC_IFFT_input);
+
+% Execute the IFFT and retain the first 102 samples.
+% The AgcBurst shall occupy 5 microseconds, 
+% which at 20.48MHz yields 102 samples.
+
+AgcBurst3 = ifft(AGC_IFFT_input,1024);
+AgcBurst = AgcBurst3(1:103);
+
+% visualization
+ figure('Name', 'Neptune AGC Burst')
+ plot([1:103], AgcBurst)
+
+
 %% Load Neptune Workspace and open Simulink Models
 
 % load the workspace created by the Neptune section of this script
