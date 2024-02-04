@@ -392,7 +392,7 @@ AgcBurst1 = zadoffChuSeq(u,Nzc);
  figure('Name', 'Neptune Zadoff-Chu Sequence I vs Q');
  plot(AgcBurst1);
  figure('Name', 'First 100 values of Neptune Zadoff-Chu Sequence')
- plot([1:100],AgcBurst1(1:100));
+ plot([1:100],real(AgcBurst1(1:100)));
 
 % We now take the Nzc = 887-point discrete Fourier transform.
 % A second argument to fft specifies a number of points n for 
@@ -410,7 +410,7 @@ ScNegative = floor(Nzc/2);
 
 % We set up an AGC IFFT input buffer of length 1024 
 
-AGC_IFFT_input = zeros(1024,1);
+AGC_IFFT_input = zeros(IFFTsize,1);
 
 % We map AgcBurst2 to the IFFT_input as so:
 % Note that MATLAB uses 1-based indexing 
@@ -418,22 +418,22 @@ AGC_IFFT_input = zeros(1024,1);
 % We need to ensure that index zero (DC) is set to zero. 
 
 AGC_IFFT_input(2:ScPositive) = AgcBurst2(2:ScPositive);
-AGC_IFFT_input(IFFTsize - ScNegative:1024) = AgcBurst2(Nzc - ScNegative:Nzc);
+AGC_IFFT_input(IFFTsize - ScNegative:IFFTsize) = AgcBurst2(Nzc - ScNegative:Nzc);
 
 % visualization
  figure('Name', 'Our IFFT Input');
- plot([1:1024],AGC_IFFT_input);
+ plot([1:IFFTsize],real(AGC_IFFT_input));
 
 % Execute the IFFT and retain the first 102 samples.
 % The AgcBurst shall occupy 5 microseconds, 
 % which at 20.48MHz yields 102 samples.
 
-AgcBurst3 = ifft(AGC_IFFT_input,1024);
+AgcBurst3 = ifft(AGC_IFFT_input,IFFTsize);
 AgcBurst = AgcBurst3(1:103);
 
 % visualization
  figure('Name', 'Neptune AGC Burst')
- plot([1:103], AgcBurst)
+ plot([1:103], real(AgcBurst))
 
 
 %% Load Neptune Workspace and open Simulink Models
