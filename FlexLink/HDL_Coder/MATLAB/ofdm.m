@@ -435,6 +435,16 @@ AgcBurst = AgcBurst3(1:102);
  figure('Name', 'Neptune AGC Burst')
  plot([1:102], real(AgcBurst))
 
+
+%% Create Push to Talk (PTT)
+
+PTT_1 = repmat(0, 1024, 1);
+PTT_2 = repmat(1, 1024*5, 1);
+PTT = cat(1, PTT_1, PTT_2);
+PTT = logical(PTT);
+%PTT = timetable(PTT,'SampleRate',22120448)
+PTT = timeseries(PTT, 1/22120448)
+
 %% Save Workspace
 
 
