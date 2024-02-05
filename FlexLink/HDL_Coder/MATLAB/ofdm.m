@@ -398,7 +398,7 @@ AgcBurst1 = zadoffChuSeq(u,Nzc);
 % A second argument to fft specifies a number of points n for 
 % the transform, representing DFT length.
 
-AgcBurst2 = fft(AgcBurst1, IFFTsize);
+AgcBurst2 = fft(AgcBurst1, 887);
 
 % By definition, we will have a certain number of positive 
 % frequency subcarriers, m = 0, 1, ... ,ScPositive-1 and a certain 
