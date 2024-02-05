@@ -399,6 +399,7 @@ AgcBurst1 = zadoffChuSeq(u,Nzc);
 % the transform, representing DFT length.
 
 AgcBurst2 = fft(AgcBurst1, 887);
+AgcBurst2 = AgcBurst2/sqrt(887);
 
 % By definition, we will have a certain number of positive 
 % frequency subcarriers, m = 0, 1, ... ,ScPositive-1 and a certain 
@@ -417,8 +418,8 @@ AGC_IFFT_input = zeros(IFFTsize,1);
 % and the specification uses 0-based indexing.
 % We need to ensure that index zero (DC) is set to zero. 
 
-AGC_IFFT_input(2:ScPositive) = AgcBurst2(2:ScPositive);
-AGC_IFFT_input(IFFTsize - ScNegative:IFFTsize) = AgcBurst2(Nzc - ScNegative:Nzc);
+AGC_IFFT_input(2:ScPositive+1) = AgcBurst2(1:ScPositive);
+AGC_IFFT_input(IFFTsize+1 - ScNegative:IFFTsize) = AgcBurst2(Nzc +1 - ScNegative:Nzc);
 
 % visualization
  figure('Name', 'Our IFFT Input');
@@ -429,11 +430,12 @@ AGC_IFFT_input(IFFTsize - ScNegative:IFFTsize) = AgcBurst2(Nzc - ScNegative:Nzc)
 % which at 20.48MHz yields 102 samples.
 
 AgcBurst3 = ifft(AGC_IFFT_input,IFFTsize);
-AgcBurst = AgcBurst3(1:103);
+AgcBurst3 = AgcBurst3*sqrt(1024);
+AgcBurst = AgcBurst3(1:102);
 
 % visualization
  figure('Name', 'Neptune AGC Burst')
- plot([1:103], real(AgcBurst))
+ plot([1:102], real(AgcBurst))
 
 
 %% Load Neptune Workspace and open Simulink Models
