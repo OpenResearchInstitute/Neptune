@@ -371,8 +371,6 @@ ee = norm(dd)
 figure('Name','Plot the Difference Between Input Tones and the DFT');
 plot(2:1024, abs(dd(2:1024)), "LineWidth", 4)
 
-% Save entire workspace as ofdm_neptune_section_workspace.mat
-save('ofdm_neptune_section_workspace.mat')
 
 %% AGC Burst Creation
 % This is a Zadoff-Chu sequence, similar to the one in 3GPP LTE
@@ -436,6 +434,12 @@ AgcBurst = AgcBurst3(1:102);
 % visualization
  figure('Name', 'Neptune AGC Burst')
  plot([1:102], real(AgcBurst))
+
+%% Save Workspace
+
+
+% Save entire workspace as ofdm_neptune_section_workspace.mat
+save('ofdm_neptune_section_workspace.mat')
 
 
 %% Load Neptune Workspace and open Simulink Models
