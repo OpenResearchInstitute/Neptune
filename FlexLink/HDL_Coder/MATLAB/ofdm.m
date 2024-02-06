@@ -426,14 +426,27 @@ AGC_IFFT_input(IFFTsize+1 - ScNegative:IFFTsize) = AgcBurst2(Nzc +1 - ScNegative
 % Execute the IFFT and retain the first 102 samples.
 % The AgcBurst shall occupy 5 microseconds, 
 % which at 20.48MHz yields 102 samples.
+% and at 22120448 Hz yields 110.6 samples.
+% 22120448 is our "1106 samples per symbol" sample rate
+% we use the floor function (round down) to 110.
 
 AgcBurst3 = ifft(AGC_IFFT_input,IFFTsize);
 AgcBurst3 = AgcBurst3*sqrt(1024);
-AgcBurst = AgcBurst3(1:102);
+
+AgcBurstLength = floor(5e-6*22120448);
+
+AgcBurst = AgcBurst3(1:AgcBurstLength);
 
 % visualization
- figure('Name', 'Neptune AGC Burst')
- plot([1:102], real(AgcBurst))
+figure('Name', 'Neptune AGC Burst')
+plot([1:AgcBurstLength], real(AgcBurst))
+
+AgcBurst = AgcBurst*2^14
+
+AgcBurst = fi(AgcBurst)
+
+
+
 
 
 %% Create Push to Talk (PTT)
