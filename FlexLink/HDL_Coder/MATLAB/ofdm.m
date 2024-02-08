@@ -445,6 +445,7 @@ AgcBurst = AgcBurst*2^14
 
 AgcBurst = fi(AgcBurst)
 
+a = fi(0,1,16,0)
 
 
 
