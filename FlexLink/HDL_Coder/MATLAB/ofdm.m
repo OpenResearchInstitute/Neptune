@@ -435,17 +435,96 @@ AgcBurst3 = AgcBurst3*sqrt(1024);
 
 AgcBurstLength = floor(5e-6*22120448);
 
-AgcBurst = AgcBurst3(1:AgcBurstLength);
+% we may need the first value to be 0 in circuit
+AgcBurst = zeros(AgcBurstLength+1,1);
+AgcBurst(2:AgcBurstLength+1) = AgcBurst3(1:AgcBurstLength);
+AgcBurst(1) = complex(0,0);
 
 % visualization
 figure('Name', 'Neptune AGC Burst')
-plot([1:AgcBurstLength], real(AgcBurst))
+plot([1:size(AgcBurst,1)], real(AgcBurst))
 
 AgcBurst = AgcBurst*2^14
 
 AgcBurst = fi(AgcBurst)
 
 a = fi(0,1,16,0)
+
+%% Preamble B Creation
+% This is a Zadoff-Chu sequence, similar to the one in 3GPP LTE
+% It has essentially zero autocorrelation off of the zero lag position.
+% Commonly used for synchronization in cellular protocols. 
+
+% Sequence length
+NzcB = 331;
+
+% Root index
+u = 34;
+
+% Zadoff Chu sequence function
+PreambleB1 = zadoffChuSeq(u,NzcB);
+
+% Visualization
+ figure('Name', 'Neptune Zadoff-Chu Sequence I vs Q');
+ plot(PreambleB1);
+ figure('Name', 'First 100 values of Neptune Zadoff-Chu Sequence')
+ plot([1:100],real(PreambleB1(1:100)));
+
+% We now take the Nzc = 331-point discrete Fourier transform.
+% A second argument to fft specifies a number of points n for 
+% the transform, representing DFT length.
+
+PreambleB2 = fft(PreambleB1, 331);
+PreambleB2 = PreambleB2/sqrt(331);
+
+% By definition, we will have a certain number of positive 
+% frequency subcarriers, m = 0, 1, ... ,ScPositiveB-1 and a certain 
+% number of negative frequency subcarriers, 
+% m = NzcB - ScNegativeB, ... , NzcB-1.
+
+ScPositiveB = ceil(NzcB/2);
+ScNegativeB = floor(NzcB/2);
+
+% We set up an AGC IFFT inputB buffer of length 1024 
+
+AGC_IFFT_inputB = zeros(IFFTsize,1);
+
+% We map PreambleB2 to the IFFT_input as so:
+% Note that MATLAB uses 1-based indexing 
+% and the specification uses 0-based indexing.
+% We need to ensure that index zero (DC) is set to zero. 
+
+AGC_IFFT_inputB(2:ScPositiveB+1) = PreambleB2(1:ScPositiveB);
+AGC_IFFT_inputB(IFFTsize+1 - ScNegativeB:IFFTsize) = PreambleB2(NzcB +1 - ScNegativeB:NzcB);
+
+% visualization
+ figure('Name', 'Our IFFT Input');
+ plot([1:IFFTsize],real(AGC_IFFT_inputB));
+
+% Execute the IFFT and retain all 1024 samples
+% I think we mean to use 1106 action item to check this
+
+PreambleB3 = ifft(AGC_IFFT_inputB,IFFTsize);
+PreambleB3 = PreambleB3*sqrt(1024);
+
+% get the size of what we've calculated
+PreambleBBurstLength = size(PreambleB3,1);
+
+% we may need the first value to be 0 in circuit
+PreambleB = zeros(PreambleBBurstLength+1,1);
+PreambleB(2:PreambleBBurstLength+1) = PreambleB3(1:PreambleBBurstLength);
+PreambleB(1) = complex(0,0);
+
+% visualization
+figure('Name', 'Neptune Preamble B')
+plot([1:size(PreambleB,1)], real(PreambleB))
+
+PreambleB = PreambleB*2^14;
+
+PreambleB = fi(PreambleB)
+
+
+
 
 
 
