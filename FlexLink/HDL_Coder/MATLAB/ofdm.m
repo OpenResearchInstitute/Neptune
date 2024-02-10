@@ -474,6 +474,7 @@ PreambleAlong = 0.25*(Tone1 + Tone2 + Tone3 + Tone4);
 figure("Name", "Long Preamble A")
 plot(long_t, PreambleAlong)
 
+PreambleAlong(1) = complex(0,0);
 PreambleAlong = transpose(PreambleAlong*2^14);
 PreambleAlong = fi(PreambleAlong)
 
@@ -486,6 +487,7 @@ PreambleAshort = 0.25*(Tone1 + Tone2 + Tone3 + Tone4);
 figure("Name", "Short Preamble A")
 plot(short_t, PreambleAshort)
 
+PreambleAshort(1) = complex(0,0);
 PreambleAshort = transpose(PreambleAshort*2^14);
 PreambleAshort = fi(PreambleAshort)
 
