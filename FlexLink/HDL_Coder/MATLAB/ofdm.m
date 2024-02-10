@@ -450,6 +450,48 @@ AgcBurst = fi(AgcBurst)
 
 a = fi(0,1,16,0)
 
+%% Preamble A Creation
+% either 250 or 25 micro seconds depending on whether the
+% transmitter wants the receiver to do frequency offset 
+% acquisition and removal or not. 
+% 22120448 Hz sample rate for transmitter
+
+% equation
+long_t_samples = floor(250e-06*22120448);
+short_t_samples = floor(25e-06*22120448);
+long_t = 0:1/22120448:(long_t_samples-1)/22120448;
+short_t = 0:1/22120448:(short_t_samples-1)/22120448;
+
+Tone_Frequency_1 = 4*160e3
+Tone_Frequency_2 = 12*160e3
+
+Tone1 = exp( 1*j*2*pi*Tone_Frequency_1*long_t);
+Tone2 = exp( 1*j*2*pi*Tone_Frequency_2*long_t); 
+Tone3 = exp(-1*j*2*pi*Tone_Frequency_1*long_t); 
+Tone4 = exp(-1*j*2*pi*Tone_Frequency_2*long_t); 
+
+PreambleAlong = 0.25*(Tone1 + Tone2 + Tone3 + Tone4);
+figure("Name", "Long Preamble A")
+plot(long_t, PreambleAlong)
+
+PreambleAlong = transpose(PreambleAlong*2^14);
+PreambleAlong = fi(PreambleAlong)
+
+Tone1 = exp( 1*j*2*pi*Tone_Frequency_1*short_t);
+Tone2 = exp( 1*j*2*pi*Tone_Frequency_2*short_t); 
+Tone3 = exp(-1*j*2*pi*Tone_Frequency_1*short_t); 
+Tone4 = exp(-1*j*2*pi*Tone_Frequency_2*short_t); 
+
+PreambleAshort = 0.25*(Tone1 + Tone2 + Tone3 + Tone4);
+figure("Name", "Short Preamble A")
+plot(short_t, PreambleAshort)
+
+PreambleAshort = transpose(PreambleAshort*2^14);
+PreambleAshort = fi(PreambleAshort)
+
+
+
+
 %% Preamble B Creation
 % This is a Zadoff-Chu sequence, similar to the one in 3GPP LTE
 % It has essentially zero autocorrelation off of the zero lag position.
@@ -522,10 +564,6 @@ plot([1:size(PreambleB,1)], real(PreambleB))
 PreambleB = PreambleB*2^14;
 
 PreambleB = fi(PreambleB)
-
-
-
-
 
 
 
