@@ -572,8 +572,9 @@ PreambleB = fi(PreambleB)
 %% Create Push to Talk (PTT)
 
 PTT_1 = repmat(0, 1024, 1);
-PTT_2 = repmat(1, 1024*5, 1);
-PTT = cat(1, PTT_1, PTT_2);
+PTT_2 = repmat(1, 1024*7, 1);
+PTT_3 = repmat(0, 1024, 1);
+PTT = cat(1, PTT_1, PTT_2, PTT_3);
 PTT = logical(PTT);
 %PTT = timetable(PTT,'SampleRate',22120448)
 PTT = timeseries(PTT, 1/22120448)
