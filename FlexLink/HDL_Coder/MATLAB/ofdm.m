@@ -151,7 +151,7 @@ for n = 0:N-1
     echo off
 end
 
-echo on
+echo on 
 
 %The norm function calculates several different types of matrix norms: 
 % e = norm(d) returns the largest singular value of d, which is the set of
@@ -416,8 +416,8 @@ AGC_IFFT_input = zeros(IFFTsize,1);
 % and the specification uses 0-based indexing.
 % We need to ensure that index zero (DC) is set to zero. 
 
-AGC_IFFT_input(2:ScPositive+1) = AgcBurst2(1:ScPositive);
-AGC_IFFT_input(IFFTsize+1 - ScNegative:IFFTsize) = AgcBurst2(Nzc +1 - ScNegative:Nzc);
+AGC_IFFT_input(1:ScPositive) = AgcBurst2(1:ScPositive);
+AGC_IFFT_input(IFFTsize - ScNegative:IFFTsize-1) = AgcBurst2(Nzc - ScNegative:Nzc-1);
 
 % visualization
  figure('Name', 'Our IFFT Input');
@@ -435,10 +435,13 @@ AgcBurst3 = AgcBurst3*sqrt(1024);
 
 AgcBurstLength = floor(5e-6*22120448);
 
-% we may need the first value to be 0 in circuit
+% The first value is punctured. We over-write with 0.
+% We also need a leading zero to make this part of the circuit
+% deliver a zero before the count starts. 
 AgcBurst = zeros(AgcBurstLength+1,1);
 AgcBurst(2:AgcBurstLength+1) = AgcBurst3(1:AgcBurstLength);
-AgcBurst(1) = complex(0,0);
+AgcBurst(2) = complex(0,0); % DC term
+AgcBurst(1) = complex(0,0); % quiescent term
 
 % visualization
 figure('Name', 'Neptune AGC Burst')
@@ -536,7 +539,9 @@ AGC_IFFT_inputB = zeros(IFFTsize,1);
 % We map PreambleB2 to the IFFT_input as so:
 % Note that MATLAB uses 1-based indexing 
 % and the specification uses 0-based indexing.
-% We need to ensure that index zero (DC) is set to zero. 
+% We need to ensure that the first value (DC) is set to zero.
+% We need to have a leading zero before that for quiescent case.
+
 
 AGC_IFFT_inputB(2:ScPositiveB+1) = PreambleB2(1:ScPositiveB);
 AGC_IFFT_inputB(IFFTsize+1 - ScNegativeB:IFFTsize) = PreambleB2(NzcB +1 - ScNegativeB:NzcB);
@@ -554,10 +559,11 @@ PreambleB3 = PreambleB3*sqrt(1024);
 % get the size of what we've calculated
 PreambleBBurstLength = size(PreambleB3,1);
 
-% we may need the first value to be 0 in circuit
+% we need the first value to be 0 in circuit
 PreambleB = zeros(PreambleBBurstLength+1,1);
 PreambleB(2:PreambleBBurstLength+1) = PreambleB3(1:PreambleBBurstLength);
-PreambleB(1) = complex(0,0);
+PreambleB(1) = complex(0,0); % leading zero for quiescence.
+PreambleB(2) = complex(0,0); % puncture what would otherwise be lost.
 
 % visualization
 figure('Name', 'Neptune Preamble B')
