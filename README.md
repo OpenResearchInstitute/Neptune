@@ -1,7 +1,9 @@
 # Neptune
 Open source low-latency OFDM data communications link for drones and aerospace.
+See FlexLink folder for published versions of the FlexLink specification. Contact Leonard on Slack to get involved. 
+See below for the current version of the Trueflight specifications, a simplified version with 60 kHz subcarrier spacing. 
 
-## Neptune Requirements
+## Neptune Trueflight Requirements
 
 1) The primary link design requirement is low latency. Optimizations for low latency are weighted heavier than other metrics when trade-offs are considered.
   
@@ -19,7 +21,7 @@ Extended Typical Urban model (ETU)
 
 5) Data link can be resumed if interrupted or lost.
 
-## Neptune Specifications
+## Neptune Trueflight Specifications
 
 Specifications are stated [with related requirements in brackets]
 
@@ -33,6 +35,5 @@ Specifications are stated [with related requirements in brackets]
 
 Using flexible subcarrier spacing, the choices are 15, 30, 60, 120, 240, and 480 kHz. A rule of thumb based on band conditions, 15 kHZ to 60 kHz is used in carrier channels below 6 GHz, and 60 kHz to 120 kHz is used for higher frequency bands. Larger subcarrier spacings mean lower latency and higher frequencies.
 
-- [ ] investigate 60 kHz as a subcarrier spacing for Neptune in order to maximize low latency performance. 
-
-- [ ] investigate adaptive subcarrier spacing. 
+- [ ] investigate 60 kHz as a subcarrier spacing for Neptune in order to maximize low latency performance. Publish a video summarizing results. 
+ 
