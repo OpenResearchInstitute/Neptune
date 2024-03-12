@@ -1,6 +1,8 @@
 # Neptune
 Open source low-latency OFDM data communications link for drones and aerospace.
+
 See FlexLink folder for published versions of the FlexLink specification. Contact Leonard on Slack to get involved. 
+
 See below for the current version of the Trueflight specifications, a simplified version with 60 kHz subcarrier spacing. 
 
 ## Neptune Trueflight Requirements
