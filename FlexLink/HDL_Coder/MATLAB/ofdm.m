@@ -436,12 +436,10 @@ AgcBurst3 = AgcBurst3*sqrt(1024);
 AgcBurstLength = floor(5e-6*22120448);
 
 % The first value is punctured. We over-write with 0.
-% We also need a leading zero to make this part of the circuit
-% deliver a zero before the count starts. 
-AgcBurst = zeros(AgcBurstLength+1,1);
-AgcBurst(2:AgcBurstLength+1) = AgcBurst3(1:AgcBurstLength);
-AgcBurst(2) = complex(0,0); % DC term
-AgcBurst(1) = complex(0,0); % quiescent term
+AgcBurst = zeros(AgcBurstLength,1);
+AgcBurst(2:AgcBurstLength) = AgcBurst3(2:AgcBurstLength);
+AgcBurst(1) = complex(0,0); % DC term
+%AgcBurst(1) = complex(0,0); % quiescent term used to be inserted
 
 % visualization
 figure('Name', 'Neptune AGC Burst')
