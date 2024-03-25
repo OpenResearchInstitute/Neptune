@@ -558,10 +558,9 @@ PreambleB3 = PreambleB3*sqrt(1024);
 PreambleBBurstLength = size(PreambleB3,1);
 
 % we need the first value to be 0 in circuit
-PreambleB = zeros(PreambleBBurstLength+1,1);
-PreambleB(2:PreambleBBurstLength+1) = PreambleB3(1:PreambleBBurstLength);
-PreambleB(1) = complex(0,0); % leading zero for quiescence.
-PreambleB(2) = complex(0,0); % puncture what would otherwise be lost.
+PreambleB = zeros(PreambleBBurstLength,1);
+PreambleB(2:PreambleBBurstLength) = PreambleB3(2:PreambleBBurstLength);
+PreambleB(1) = complex(0,0); % puncture what would otherwise be lost.
 
 % visualization
 figure('Name', 'Neptune Preamble B')
