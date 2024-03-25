@@ -23,7 +23,6 @@ initial_value = false;
 
 switch reset
     case 0 % not in reset
-        %output = initial_value; % may not need this
         switch trigger
             case 0
                 output = output_held_value;
