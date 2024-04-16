@@ -13,7 +13,56 @@ __license__   = "MIT"
 # --------------------------------------------------------
 # was from   FlexLinkParameters import *
 import sys
-sys.path.insert(0, '.\\python\\koliberEng')
+import os
+
+# this assumes that you are running from a path located where the
+# code is also located. 
+# Specific directory name you want to change to
+working_directory = "python"
+
+# Get the full path of the script
+script_path = os.path.abspath(sys.argv[0])
+
+# Split the path into directories
+path_parts = script_path.split(os.sep)
+
+# Check if the specific directory name is in the path and reconstruct the path up to that directory
+if working_directory in path_parts:
+    # Find the index of the specific directory
+    index = path_parts.index(working_directory)
+    
+    # Reconstruct the path up to the specific directory
+    new_path = os.sep.join(path_parts[:index + 1])
+
+    # Change the current working directory
+    os.chdir(new_path)
+    
+    print(f"Changed current working directory to '{new_path}'")
+    sys.path.insert(1, '.\\KoliberEng')
+    print("inserting KoliberEng to sys.path ")
+
+else:
+    print(f"The directory '{working_directory}' does not exist in the path")
+    exit
+
+
+# chat [9:12 AM] Schwarzinger Andreas (8USNT)
+# --------------------------------------------
+# Import Modules
+# --------------------------------------------
+"""
+import os
+import sys                               # We use sys to include new search paths of modules
+OriginalWorkingDirectory = os.getcwd()   # Get the current directory
+DirectoryOfThisFile      = os.path.dirname(__file__)   # FileName = os.path.basename
+if DirectoryOfThisFile != '':
+    os.chdir(DirectoryOfThisFile)        # Restore the current directory
+ 
+# There are modules that we will want to access and they sit two directories above DirectoryOfThisFile
+sys.path.append(DirectoryOfThisFile + "\\..\\..\\DspComm")
+"""
+
+
 
 import FlexLinkParameters as fp
 from   FlexLinkCoder      import CCrcProcessor, CLdpcProcessor
@@ -22,7 +71,10 @@ import Preamble
 import numpy              as np
 import math
 import matplotlib.pyplot  as plt
-import Visualization as vis
+
+# to add this file path to vscode use "ctrl + ," then search to extrapaths then add the path
+# pylance or interpreter can now find the libs
+import Visualization   
 
 
 # --------------------------------------------------------
@@ -70,9 +122,9 @@ class CFlexTransmitter():
         assert abs(self.ScSpacing - Configuration.ControlInfo.ESc.value) < 1000
 
 
-    # ------------------------------------------------------
+    # -------------------------------------------------------------------------
     # > Function: BuildTxWaveform for Point to Point transmit signal
-    # ------------------------------------------------------
+    # -------------------------------------------------------------------------
     def BuildTxWaveform(self
                       , bFreqOffsetSync: bool = False
                       , PayloadA: bytearray = bytearray(1)
@@ -350,6 +402,13 @@ if __name__ == '__main__':
 
     EncodedPayloadB = Transmitter.EncodePayload(PayloadType    = 'B'
                                               , MacBytePayload =  ByteArrayPayloadA)   
+
+    
+    v = Visualization.Visualization()
+    AgcBurst = list(Transmitter.AgcBurst)
+    v.plot_constellation(AgcBurst, start=-110, end=-10, name='AGC burst')
+    v.plot_iq_data2x(Transmitter.AgcBurst.real, Transmitter.AgcBurst.imag, "agc real", "agc imag")
+
 
     Stop =1 
 
