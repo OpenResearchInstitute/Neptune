@@ -4,7 +4,7 @@
 
 ## Neptune Trueflight Requirements
 
-1) The primary link design requirement is low latency. Optimizations for low latency are weighted heavier than other metrics when trade-offs are considered.
+1) The primary link design requirement is 10mS round-trip delay. Optimizations for low latency are weighted heavier than other metrics when trade-offs are considered.
   
 2) High reliability is expected in the following multi path environments.
    
@@ -14,7 +14,7 @@ Extended Vehicular A model (EVA)
 
 Extended Typical Urban model (ETU)
 
-3) High reliability is expected using base station high speed train scenario.
+3) High reliability (metric?) is expected using base station high speed train scenario.
 
 4) High reliability is expected using the AWGN moving propagation model.
 
