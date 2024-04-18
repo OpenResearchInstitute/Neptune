@@ -4,7 +4,7 @@
 
 ## Neptune Trueflight Requirements
 
-1) The primary link design requirement is low latency. Optimizations for low latency are weighted heavier than other metrics when trade-offs are considered.
+1) The primary link design requirement is 10mS round-trip delay. Optimizations for low latency are weighted heavier than other metrics when trade-offs are considered.
   
 2) High reliability is expected in the following multi path environments.
    
