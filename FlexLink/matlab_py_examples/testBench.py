@@ -140,6 +140,8 @@ if tx_sample_rate == 40e6:
 
 # Demodulate the received, noisy sequence
 start_sample = 116
+start_sample = 137
+
 rx_resource_grid = ofdm_demodulator(rx_input_sequence, start_sample, b_lte_bw)  # Assuming implementation
 
 # Error calculation

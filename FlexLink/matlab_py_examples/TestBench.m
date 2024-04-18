@@ -62,7 +62,9 @@ end
 % ---------------------------------------------------------
 % Processing preamble B points us to the start of the IFFT portion
 % of the OFDM symbol. Here I set this instance manually.
-StartSample        = 116;
+%lwdStartSample        = 116;
+StartSample        = 135;
+
 
 RxResourceGrid = OfdmDemodulator(RxInputSequence, StartSample, bLteBw);
 

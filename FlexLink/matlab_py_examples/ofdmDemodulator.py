@@ -54,9 +54,17 @@ def ofdm_demodulator(input_sequence, start_sample, b_lte_bw):
     ofdm_symbol_length = cp_length + fft_size
     subcarrier_spacing = sample_rate / fft_size
 
+
+    """ An OFDM symbol is the concatenation of the CP and the IFFT portion
+    The StartSample input argument is the estimated position of the first sample
+    of the Ifft portion of the first valid OFDM symbol in the FlexLink Packet.
+    The start time is found via the correlation against PreambleB.
+    We will start 1 microsecond inside the CP to avoid intersymbol 
+    interference due to channel precusors."""
     one_microseconds_in_samples = 20
     assert start_sample > one_microseconds_in_samples, "Improper input sequence."
 
+    # Determine the number of available OFDM symbols we can demodulator
     num_available_ofdm_symbols = len(input_sequence) // ofdm_symbol_length
 
     if b_lte_bw:  # LTE BW
@@ -77,19 +85,25 @@ def ofdm_demodulator(input_sequence, start_sample, b_lte_bw):
     one_microsecond = one_microseconds_in_samples / sample_rate
     compensation = np.exp(1j * 2 * np.pi * one_microsecond * tones_ieee * subcarrier_spacing)
 
+
+    #output_waveform = waveform*np.exp(1j*2*np.pi*(delta_f/Fs)*np.arange(len(waveform)) +
+    #                                  1j * phaseoff)
+
+
     # Start the OFDM Demodulation Process
     resource_grid = np.zeros((num_subcarriers, num_available_ofdm_symbols), dtype=complex)
     start_index = start_sample - one_microseconds_in_samples
     range_indices = np.arange(start_index, start_index + fft_size)
 
-    for idx in range(num_available_ofdm_symbols):
+    for idx in range(num_available_ofdm_symbols-1):
         fft_input_buffer = input_sequence[range_indices]
         fft_output_buffer = np.fft.fft(fft_input_buffer)
 
         # Place the compensated FFT output into the resource grid
         resource_grid[pos_subcarrier_indices, idx] = fft_output_buffer[pos_fft_indices]
         resource_grid[neg_subcarrier_indices, idx] = fft_output_buffer[neg_fft_indices]
-        resource_grid[:, idx] *= compensation
+        
+        ### resource_grid[:, idx] *= compensation
 
         range_indices += ofdm_symbol_length
 

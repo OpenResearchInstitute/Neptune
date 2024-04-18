@@ -37,7 +37,7 @@ end
 % Phase compensation for 1 microsecond advance
 TonesIEEE      = -(NumSubcarriers - 1)/2 : 1 : (NumSubcarriers - 1)/2;
 OneMicroSecond = OneMicrosecondsInSamples / SampleRate;   % = 1e-6
-Compensation   = exp(1j*2*pi*OneMicroSecond*TonesIEEE*SubcarrierSpacing).'; 
+%lwd Compensation   = exp(1j*2*pi*OneMicroSecond*TonesIEEE*SubcarrierSpacing).'; 
 
 % Start the OFDM Demodulation Process (l is the 0 based OFDM symbol index)
 ResourceGrid   = zeros(NumSubcarriers, NumAvailableOfdmSymbols);
@@ -50,7 +50,7 @@ for l = 0:NumAvailableOfdmSymbols - 1
     % Place the compensated FftOutput into the resource grid
     ResourceGrid(PosSubcarrierIndices + 1, l + 1) = FftOutputBuffer(PosFftIndices + 1, 1);
     ResourceGrid(NegSubcarrierIndices + 1, l + 1) = FftOutputBuffer(NegFftIndices + 1, 1);
-    ResourceGrid(:, l+1)                          = ResourceGrid(:, l+1) .* Compensation;
+    %lwdResourceGrid(:, l+1)                          = ResourceGrid(:, l+1) .* Compensation;
 
     Range                                         = Range + OfdmSymbolLength;
 end
