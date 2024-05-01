@@ -37,7 +37,7 @@ switch reset
             otherwise
                 output = initial_value;
         end
-    case 1 % reset signal received
+    case 1 % active high reset condition received
         output = initial_value;
         sample_held = false;
         output_held_value = false;
