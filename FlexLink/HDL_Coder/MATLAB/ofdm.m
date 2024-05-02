@@ -215,15 +215,16 @@ echo off
 echo on
 
 %set the mandatory bandwidth
-B = 20e6;
+BW = 20e6;
+%BW = 40e6; %Trueflight
 
 %Set the master clock frequency assumed in the specification
-Fs = 20.48e6;
+Fs = 20.48e6; %FlexLink
+%Fs = 40e6; %Trueflight
 
 %set the IFFT size (this is the number of points in the DFT (IDFT).
-% This value was N in the book. We aren't really going to use this? It's
-% 1024 before calculating a 1024 FFT is easier than calcuating a 901 FFT? 
-IFFTsize = 1024;
+IFFTsize = 1024; %FlexLink
+%IFFTsize = 2048; %Trueflight
 
 %set mandatory subcarrier spacing
 SS = Fs/IFFTsize;
@@ -369,7 +370,7 @@ ee = norm(dd)
 
 %plot the error, leaving out k = 0.
 figure('Name','Plot the Difference Between Input Tones and the DFT');
-plot(2:1024, abs(dd(2:1024)), "LineWidth", 4)
+plot(2:IFFTsize, abs(dd(2:IFFTsize)), "LineWidth", 4)
 
 
 %% AGC Burst Creation
@@ -426,30 +427,29 @@ AGC_IFFT_input(IFFTsize - ScNegative:IFFTsize-1) = AgcBurst2(Nzc - ScNegative:Nz
 % Execute the IFFT and retain the first 102 samples.
 % The AgcBurst shall occupy 5 microseconds, 
 % which at 20.48MHz yields 102 samples.
-% and at 22120448 Hz yields 110.6 samples.
-% 22120448 is our "1106 samples per symbol" sample rate
-% we use the floor function (round down) to 110.
+% 
+% we use the floor function to make this an integer
 
 AgcBurst3 = ifft(AGC_IFFT_input,IFFTsize);
-AgcBurst3 = AgcBurst3*sqrt(1024);
+%AgcBurst3 = AgcBurst3*sqrt(IFFTsize);
+AgcBurst3 = AgcBurst3*sqrt(Nzc);
 
-AgcBurstLength = floor(5e-6*22120448);
+% obtain the length of the AGC burst
+AgcBurstLength = floor(5e-6*Fs);
 
-% The first value is punctured. We over-write with 0.
+% set up a zero'd out array of the calculated length
 AgcBurst = zeros(AgcBurstLength,1);
+% leaving the first value set to zero, copy over values from AgcBurst3
 AgcBurst(2:AgcBurstLength) = AgcBurst3(2:AgcBurstLength);
-AgcBurst(1) = complex(0,0); % DC term
-%AgcBurst(1) = complex(0,0); % quiescent term used to be inserted
+% set the first value to zero
+AgcBurst(1) = complex(0,0);
 
 % visualization
 figure('Name', 'Neptune AGC Burst')
 plot([1:size(AgcBurst,1)], real(AgcBurst))
 
-AgcBurst = AgcBurst*2^14
-
-AgcBurst = fi(AgcBurst)
-
-a = fi(0,1,16,0)
+% convert to signed fixed point sfix16_en15
+AgcBurst = fi(AgcBurst,1,16,15)
 
 %% Preamble A Creation
 % either 250 or 25 micro seconds depending on whether the
@@ -458,39 +458,49 @@ a = fi(0,1,16,0)
 % 22120448 Hz sample rate for transmitter
 
 % equation
-long_t_samples = floor(250e-06*22120448);
-short_t_samples = floor(25e-06*22120448);
-long_t = 0:1/22120448:(long_t_samples-1)/22120448;
-short_t = 0:1/22120448:(short_t_samples-1)/22120448;
+long_t_samples = floor(250e-06*Fs); % obtain number of samples
+short_t_samples = floor(25e-06*Fs); % obtain number of samples
+long_t = 0:1/Fs:(long_t_samples-1)/Fs; % set up an array samples long
+short_t = 0:1/Fs:(short_t_samples-1)/Fs; % set up an array samples long
 
-Tone_Frequency_1 = 4*160e3
-Tone_Frequency_2 = 12*160e3
+Tone_Frequency_1 = 4*160e3 % tone frequency 1
+Tone_Frequency_2 = 12*160e3 % tone frequency 2
 
+% real and imaginary components of the two tones for long Preamble
 Tone1 = exp( 1*j*2*pi*Tone_Frequency_1*long_t);
 Tone2 = exp( 1*j*2*pi*Tone_Frequency_2*long_t); 
 Tone3 = exp(-1*j*2*pi*Tone_Frequency_1*long_t); 
 Tone4 = exp(-1*j*2*pi*Tone_Frequency_2*long_t); 
 
+% add components together and normalize
 PreambleAlong = 0.25*(Tone1 + Tone2 + Tone3 + Tone4);
 figure("Name", "Long Preamble A")
 plot(long_t, PreambleAlong)
 
+% we need the length to set up the counter to read from LUT
+PreambleAlongLength = length(PreambleAlong);
+% first value is punctured to zero
 PreambleAlong(1) = complex(0,0);
-PreambleAlong = transpose(PreambleAlong*2^14);
-PreambleAlong = fi(PreambleAlong)
+% convert to fixed point
+PreambleAlong = fi(PreambleAlong,1,16,15)
 
+% real and imaginary components of the two tones for long Preamble
 Tone1 = exp( 1*j*2*pi*Tone_Frequency_1*short_t);
 Tone2 = exp( 1*j*2*pi*Tone_Frequency_2*short_t); 
 Tone3 = exp(-1*j*2*pi*Tone_Frequency_1*short_t); 
 Tone4 = exp(-1*j*2*pi*Tone_Frequency_2*short_t); 
 
+% add components together and normalize
 PreambleAshort = 0.25*(Tone1 + Tone2 + Tone3 + Tone4);
 figure("Name", "Short Preamble A")
 plot(short_t, PreambleAshort)
 
+% we need the length to set up the counter to read from LUT
+PreambleAshortLength = length(PreambleAshort);
+% first value is punctured to zero
 PreambleAshort(1) = complex(0,0);
-PreambleAshort = transpose(PreambleAshort*2^14);
-PreambleAshort = fi(PreambleAshort)
+% convert to fixed point
+PreambleAshort = fi(PreambleAshort,1,16,15)
 
 
 
@@ -555,20 +565,19 @@ PreambleB3 = ifft(AGC_IFFT_inputB,IFFTsize);
 PreambleB3 = PreambleB3*sqrt(1024);
 
 % get the size of what we've calculated
-PreambleBBurstLength = size(PreambleB3,1);
+PreambleBLength = size(PreambleB3,1);
 
 % we need the first value to be 0 in circuit
-PreambleB = zeros(PreambleBBurstLength,1);
-PreambleB(2:PreambleBBurstLength) = PreambleB3(2:PreambleBBurstLength);
+PreambleB = zeros(PreambleBLength,1);
+PreambleB(2:PreambleBLength) = PreambleB3(2:PreambleBLength);
 PreambleB(1) = complex(0,0); % puncture what would otherwise be lost.
 
 % visualization
 figure('Name', 'Neptune Preamble B')
 plot([1:size(PreambleB,1)], real(PreambleB))
 
-PreambleB = PreambleB*2^14;
 
-PreambleB = fi(PreambleB)
+PreambleB = fi(PreambleB,1,16,15)
 
 
 
@@ -579,9 +588,12 @@ PTT_2 = repmat(1, 1024*7, 1);
 PTT_3 = repmat(0, 1024, 1);
 PTT = cat(1, PTT_1, PTT_2, PTT_3);
 PTT = logical(PTT);
-%PTT = timetable(PTT,'SampleRate',22120448)
-PTT = timeseries(PTT, 1/22120448)
+%PTT = timetable(PTT,'SampleRate',Fs)
+PTT = timeseries(PTT, 1/Fs)
 
+%% Utility Space
+% create a complex zero in signed fixed point sfix16_en15
+a = complex(fi(0,1,16,15), fi(0,1,16,15));
 %% Save Workspace
 
 
