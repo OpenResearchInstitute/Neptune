@@ -22,7 +22,7 @@ Extended Typical Urban model (ETU)
 
 6) Primary use case is live video.
 
-## Neptune Trueflight Specifications
+## Neptune Trueflight Specifications (Discussion)
 
 Specifications are stated [with related requirements in brackets] with brief discussions, justifications, action items, and outcomes.
 
@@ -40,7 +40,7 @@ Using flexible subcarrier spacing, the choices are 15, 30, 60, 120, 240, and 480
 
 - [x] investigate 60 kHz as a subcarrier spacing for Neptune in order to maximize low latency performance. 60 kHz subcarrier spacing was accepted as the specification. 
  
-2) signal bandwidth [Requirement 1, 5, 6]
+2) signal bandwidths of 40 MHz, 100 MHz [Requirement 1, 5, 6]
 
 The 5 GHz licensed amateur radio allocation is the target band for Neptune. The allocation in the US (ITU Region 2) is 5650.0 to 5925.0 MHz and spans 275 MHz. There is a published band plan from ARRL which can be found at https://www.arrl.org/band-plan
 
@@ -50,7 +50,10 @@ The intermittant and mobile nature of drone communications is an advantage to in
 
 Band planning for amateur microwave is inherently local. While ARRL publishes a band plan, it does not enforce the plan. Amateur radio band plans are voluntary agreements by operators. Amateur radio operators are expected to listen before transmitting, transmit legal signals, transmit with the lowest power necessary to complete the transmission, and cooperate with other licensed users of the band. When bands are shared and amateur radio is a secondary user, amateurs are not allowed to cause harmful interference to the primary users, and must accept interference from primary users. Since we must accept interference, there is a possibility that Neptune signals will be interfered with. This is one of the reasons for Requiremnt 5: Data link can be resumed if interrupted or lost.
 
-100 MHz is the bandwidth recommendation for frequency range 1 (FR1) segment of 5G. The amateur allocation at 5 GHz falls within FR1. Therefore, justifications for signal bandwidths for 5G should be taken into consideration. 
+100 MHz is the bandwidth recommendation for frequency range 1 (FR1) segment of 5G. The amateur allocation at 5 GHz falls within FR1. Therefore, justifications for signal bandwidths for 5G may apply. 
 
-- [ ] gather feedback from amateur radio band planners about the proposed signal placement.
+40 MHz is the maximum transmit bandwidth of the ADRV9002, which is candidate hardware for Neptune. 
+
+- [x] gather feedback from amateur radio band planners about the proposed signal placement.
 - [ ] enumerate the expected throughput for 100 MHz.
+
