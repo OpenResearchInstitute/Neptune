@@ -4,7 +4,7 @@
 
 ## Neptune Trueflight Requirements
 
-1) The primary link design requirement is 10mS round-trip delay. Optimizations for low latency are weighted heavier than other metrics when trade-offs are considered.
+1) The primary link design requirement is the round-trip radio-frequency delay 0f 4 mS. Optimizations for low latency are weighted heavier than other metrics when trade-offs are considered. 
   
 2) High reliability is expected in the following multi path environments.
    
@@ -18,13 +18,19 @@ Extended Typical Urban model (ETU)
 
 4) High reliability is expected using the AWGN moving propagation model.
 
-5) Data link can be resumed if interrupted or lost.
+5) Communications can be resumed if interrupted or lost.
 
 6) Primary use case is live video.
+
+7) Range requirement of 10 km.
+
+8) Power requirement TBD (may be a dependency of range requirement).
 
 ## Neptune Trueflight Specifications (Discussion)
 
 Specifications are stated [with related requirements in brackets] with brief discussions, justifications, action items, and outcomes.
+
+0) The modulation scheme is orthogonal frequency division modulation (OFDM). OFDM has high performance characteristics. OFDM is efficient in the drone communications enviroment. It is resilient to interference and multipath fading and it can be configured to adapt to multichannel and man-made interference. If the subcarriers are closely spaceed (see requirement 1) then high spectral efficiency can be achieved. High data rates can be delivered with acceptable computational complexity. 
 
 1) subcarrier spacing 60 kHz [Requirement 1, 2, 3, 4]
 
