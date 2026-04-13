@@ -44,7 +44,7 @@ Using flexible subcarrier spacing, the choices are 15, 30, 60, 120, 240, and 480
 
 60 kHz subcarrier spacing gives 3dB better SNR than 15 kHz subcarrier spacing at 6 GHz. 
 
-- [x] investigate 60 kHz as a subcarrier spacing for Neptune in order to maximize low latency performance. 60 kHz subcarrier spacing was accepted as the specification. 
+- (complete) investigate 60 kHz as a subcarrier spacing for Neptune in order to maximize low latency performance. 60 kHz subcarrier spacing was accepted as the specification. 
  
 2) signal bandwidths of 40 MHz, 100 MHz [Requirement 1, 5, 6]
 
@@ -60,6 +60,6 @@ Band planning for amateur microwave is inherently local. While ARRL publishes a 
 
 40 MHz is the maximum transmit bandwidth of the ADRV9002, which is candidate hardware for Neptune. 
 
-- [x] gather feedback from amateur radio band planners about the proposed signal placement.
-- [] enumerate the expected throughput for 40 MHz.
+1. (complete) gather feedback from amateur radio band planners about the proposed signal placement.
+2. enumerate the expected throughput for 40 MHz.
 
