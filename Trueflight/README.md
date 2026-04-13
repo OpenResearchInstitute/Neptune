@@ -61,5 +61,5 @@ Band planning for amateur microwave is inherently local. While ARRL publishes a 
 40 MHz is the maximum transmit bandwidth of the ADRV9002, which is candidate hardware for Neptune. 
 
 - [x] gather feedback from amateur radio band planners about the proposed signal placement.
-- [ ] enumerate the expected throughput for 100 MHz.
+- [] enumerate the expected throughput for 40 MHz.
 
